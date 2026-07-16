@@ -90,4 +90,3 @@ class BicepsCurlDetector(BaseExercise):
 
     def _safe_angle(self, dx, dy):
         return math.degrees(math.atan2(abs(dx), abs(dy))) if dy != 0 else 0.0
-    

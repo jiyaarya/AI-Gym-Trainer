@@ -14,19 +14,13 @@ from detectors.shoulder_press import ShoulderPressDetector
 from detectors.lunges import LungesDetector
 from services.config.workout_config import POSE_CONNECTIONS
 
-#the video processor class is responsible for processing the video frames from the webcam, running the pose detection model, and then passing the landmarks to the appropriate exercise detector based on the selected exercise. It also handles drawing the skeleton and feedback overlays on the video feed. The latest metrics from the detectors are stored in a thread-safe manner so that they can be accessed by the main Streamlit app for display and workout tracking purposes.
 
 class VideoProcessorClass(VideoProcessorBase):
     def __init__(self):
-        
         self._lock = threading.Lock()
         self._latest_metrics = None
         self._exercise_type = "Squats"
-        model_path = os.path.join(
-    os.getcwd(),
-    "ml_models",
-    "pose_landmarker_full.task"
-)
+
         model_path = os.path.join(os.getcwd(), "ml_models", "pose_landmarker_full.task")
         base_option = python.BaseOptions(model_asset_path=model_path)
 
@@ -74,7 +68,7 @@ class VideoProcessorClass(VideoProcessorBase):
             p1 = landmarks[start_idx]
             p2 = landmarks[end_idx]
 
-            if p1.visibility > 0.3 and p2.visibility > 0.3:
+            if p1.visibility > 0.7 and p2.visibility > 0.7:
                 cv2.line(
                     img,
                     (int(p1.x * w), int(p1.y * h)),
@@ -84,7 +78,7 @@ class VideoProcessorClass(VideoProcessorBase):
                 )
         
         for lm in landmarks:
-            if lm.visibility > 0.3:
+            if lm.visibility > 0.7:
                 cv2.circle(
                     img, 
                     (int(lm.x * w), int(lm.y * h)),
@@ -202,14 +196,13 @@ class VideoProcessorClass(VideoProcessorBase):
 
         mp_image = mp.Image(
             image_format=mp.ImageFormat.SRGB,
-            data=cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-)
+            data=cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        )
 
         self._frame_timestamps_ms += 30
         result = self._landmarker.detect_for_video(mp_image, self._frame_timestamps_ms)
 
         if result.pose_landmarks:
-            print("POSE DETECTED")
             landmarks = result.pose_landmarks[0]
 
             self._draw_skeleton(image, landmarks)
@@ -220,7 +213,6 @@ class VideoProcessorClass(VideoProcessorBase):
 
             if detector:
                 metrics = detector.process(landmarks)
-                print("METRICS:", metrics)
 
                 metrics["pose_detected"] = True
 
@@ -228,7 +220,6 @@ class VideoProcessorClass(VideoProcessorBase):
 
                 self.set_latest_metrics(metrics)
         else:
-            print("NO POSE DETECTED")
             self._draw_no_pose_warnings(image)
             
             with self._lock:

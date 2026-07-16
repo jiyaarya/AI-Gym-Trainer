@@ -2,9 +2,9 @@ from core.base_exercise import BaseExercise
 
 
 class SquatDetector(BaseExercise):
-    DOWN_THRESHOLD = 130
-    UP_THRESHOLD = 155
-    MIN_VISIBILITY = 0.5
+    DOWN_THRESHOLD = 100   
+    UP_THRESHOLD = 160     
+    MIN_VISIBILITY = 0.7
 
     LEFT_HIP = 23
     LEFT_KNEE = 25
@@ -21,7 +21,7 @@ class SquatDetector(BaseExercise):
     def reset(self):
         self.reps = 0
         self.stage = None
-#we find angle of each knee, so that user can be visible from either side. We then use the more visible knee to determine squat position and count reps. We also calculate back angle to provide feedback on form.
+
     def process(self, landmarks):
         left_knee_angle = self.calculate_angle(
             self.get_point(landmarks, self.LEFT_HIP),
@@ -54,18 +54,10 @@ class SquatDetector(BaseExercise):
         key_landmark_visible = landmarks[hip_idx].visibility >= self.MIN_VISIBILITY and landmarks[knee_idx].visibility >= self.MIN_VISIBILITY and landmarks[ankle_idx].visibility >= self.MIN_VISIBILITY
 
         if key_landmark_visible:
-            print(
-                f"KNEE={int(knee_angle)} "
-                        f"STAGE={self.stage} "
-        f"REPS={self.reps}"
-    )
-
             if knee_angle < self.DOWN_THRESHOLD:
-                print("DOWN DETECTED")
                 self.stage = "down"
 
             if knee_angle >= self.UP_THRESHOLD and self.stage == "down":
-                print("REP COUNTED")
                 self.stage = "up"
                 self.reps += 1
 
@@ -75,12 +67,6 @@ class SquatDetector(BaseExercise):
             depth_status = "STANDING"
         else:
             depth_status = "N/A"
-
-        print(
-            f"ANGLE={int(knee_angle)} | "
-            f"STAGE={self.stage} | "
-            f"REPS={self.reps}"
-)
 
         return {
             "reps": self.reps,

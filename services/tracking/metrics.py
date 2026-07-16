@@ -112,4 +112,4 @@ def sync_metrics_update(context):
         )
         
         if result:
-            st.session_state.audio_to_play, st.session_state.coach_feedback = result 
+            st.session_state.audio_to_play, st.session_state.coach_feedback = result

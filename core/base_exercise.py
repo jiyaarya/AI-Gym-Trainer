@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 class BaseExercise(ABC):
     def __init__(self):
         self.reps = 0
-        self.stage = None #position of user sitting or standing
+        self.stage = None
 
     def calculate_angle(self, a, b, c):
         ax, ay = a[0] - b[0], a[1] - b[1]
