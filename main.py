@@ -22,7 +22,7 @@ from services.coaching.voice_pipeline import VoicePipeline, autoplay_audio
 def main():
     st.set_page_config(
         page_icon=":muscle:",
-        page_title="AI Realtime Gym Coach",
+        page_title="Your Intelligent AI Fitness Partner",
         initial_sidebar_state="expanded",
         layout="centered"
         )
@@ -166,8 +166,8 @@ def main():
                 st.metric("Balance Status", st.session_state.balance_status)
 
 
-    st.title("🏋️‍♂️ AI Realtime Gym Coach")
-    st.markdown("###Real-Time pose detection with proactive AI voice feedback to perfect your form and maximize gains! :muscle:")
+    st.title("Your Intelligent AI Fitness Partner")
+    st.markdown("Train Smarter with Real-Time AI Guidance, Real-time pose detection, intelligent form correction, AI voice coaching, and workout performance tracking! :muscle:")
 
     if st.session_state.get("audio_to_play"):
         autoplay_audio(st.session_state.audio_to_play)
