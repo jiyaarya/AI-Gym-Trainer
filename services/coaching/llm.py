@@ -20,11 +20,10 @@ class LLMCoach:
         ]
 
         response = self.client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=messages,
-            temperature=0.4,
-        )
-
+        model="openai/gpt-oss-20b",
+        messages=messages,
+        temperature=0.4,
+)
         text = response.choices[0].message.content.strip()
         self.history.append({"role": "assistant", "content": text})
 
