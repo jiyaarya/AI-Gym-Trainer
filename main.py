@@ -205,13 +205,18 @@ def main():
             key="exercise-analysis",
             mode=WebRtcMode.SENDRECV,
             video_processor_factory=VideoProcessorClass,
-            rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}, #[{"urls": ["stun:stun.l.google.com:19302"]}], this is a public STUN server provided by Google that helps establish the peer-to-peer connection for WebRTC by allowing clients to discover their public IP address and port, which is essential for enabling direct communication between the user's browser and the server for real-time video streaming and processing. STUN servers are used in WebRTC to facilitate the connection setup process, especially when users are behind NATs or firewalls, by helping them determine their public-facing network information. This is crucial for ensuring that the webcam feed can be transmitted smoothly to the server for analysis and feedback during workouts.
+            rtc_configuration={
+                "iceServers": [
+                    {"urls": ["stun:stun.l.google.com:19302"]}
+                ]
+            },
             media_stream_constraints={
                 "video": True,
                 "audio": False
             },
-            async_processing=True
+            async_processing=True,
         )
+
         sync_metrics_update(context)
 
         if context.state.playing:
